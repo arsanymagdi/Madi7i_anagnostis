@@ -1,0 +1,86 @@
+name: madi7i_anagnostis
+description: A Coptic Reader App built with Flutter
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.0.0
+  shared_preferences: ^2.5.3
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/image 2-1.png
+    - assets/images/home_White_BG.png
+    - assets/images/home_Dark_BG.png
+    - assets/images/image3.png
+    - assets/images/image4.png
+    - assets/images/image4-1.png
+    - assets/images/image5.png
+    - assets/images/image6.png
+  fonts:
+    - family: RobotoSlab
+      fonts:
+        - asset: assets/fonts/RobotoSlab-Thin.ttf
+        - asset: assets/fonts/RobotoSlab-ExtraLight.ttf
+        - asset: assets/fonts/RobotoSlab-Light.ttf
+        - asset: assets/fonts/RobotoSlab-Regular.ttf
+        - asset: assets/fonts/RobotoSlab-Medium.ttf
+        - asset: assets/fonts/RobotoSlab-SemiBold.ttf
+        - asset: assets/fonts/RobotoSlab-Bold.ttf
+        - asset: assets/fonts/RobotoSlab-Black.ttf
+        - asset: assets/fonts/RobotoSlab-ExtraBold.ttf
+
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-ExtraLight.ttf
+        - asset: assets/fonts/Cairo-Light.ttf
+        - asset: assets/fonts/Cairo-Regular.ttf
+        - asset: assets/fonts/Cairo-Medium.ttf
+        - asset: assets/fonts/Cairo-SemiBold.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
+        - asset: assets/fonts/Cairo-ExtraBold.ttf
+        - asset: assets/fonts/Cairo-Black.ttf
+
+    - family: NotoSerifBengali
+      fonts:
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-Thin.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-ExtraLight.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-Light.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-Regular.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-Medium.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-SemiBold.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-Bold.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-ExtraBold.ttf
+        - asset: assets/fonts/NotoSerifBengali_ExtraCondensed-Black.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-Thin.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-ExtraLight.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-Light.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-Regular.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-Medium.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-SemiBold.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-Bold.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-ExtraBold.ttf
+        - asset: assets/fonts/NotoSerifBengali_Condensed-Black.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-Thin.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-ExtraLight.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-Light.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-Regular.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-Medium.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-SemiBold.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-Bold.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-ExtraBold.ttf
+        - asset: assets/fonts/NotoSerifBengali_SemiCondensed-Black.ttf
+        - asset: assets/fonts/NotoSerifBengali-Thin.ttf
+        - asset: assets/fonts/NotoSerifBengali-ExtraLight.ttf
+        - asset: assets/fonts/NotoSerifBengali-Light.ttf
+        - asset: assets/fonts/NotoSerifBengali-Regular.ttf
+        - asset: assets/fonts/NotoSerifBengali-Medium.ttf
+        - asset: assets/fonts/NotoSerifBengali-SemiBold.ttf
+        - asset: assets/fonts/NotoSerifBengali-Bold.ttf
+        - asset: assets/fonts/NotoSerifBengali-ExtraBold.ttf
+        - asset: assets/fonts/NotoSerifBengali-Black.ttf

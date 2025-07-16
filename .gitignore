@@ -1,0 +1,28 @@
+# Miscellaneous
+*.iml
+.idea/
+.flutter-plugins
+.flutter-plugins-dependencies
+.DS_Store
+.env
+.vs/
+.vscode/launch.json
+*.log
+
+# Build artifacts
+/build/
+.dart_tool/
+.packages
+.flutter-plugins-dependencies
+/ios/.symlinks/
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/android/.gradle/
+/android/app/build/
+/android/gradlew
+/android/gradlew.bat
+/android/local.properties
+/linux/flutter/ephemeral/
+/macos/Flutter/ephemeral/
+/windows/flutter/ephemeral/
+/web/

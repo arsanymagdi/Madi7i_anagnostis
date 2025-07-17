@@ -93,7 +93,7 @@ class WhiteEnGreetingScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const HomeScreen(),
+                          builder: (_) => const WhiteEnHomeScreen(),
                         ),
                       );
                     },

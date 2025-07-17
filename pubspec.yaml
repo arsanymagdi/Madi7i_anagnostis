@@ -8,20 +8,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.20.2
   provider: ^6.0.0
   shared_preferences: ^2.5.3
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/image 2-1.png
-    - assets/images/home_White_BG.png
-    - assets/images/home_Dark_BG.png
-    - assets/images/image3.png
-    - assets/images/image4.png
-    - assets/images/image4-1.png
-    - assets/images/image5.png
-    - assets/images/image6.png
+    - assets/images/
   fonts:
     - family: RobotoSlab
       fonts:

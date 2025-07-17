@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
-import 'choose_mode_en_screen.dart' as en;
-import 'choose_mode_ar_screen.dart' as ar;
+import 'choose_mode_en_screen.dart';
+import 'choose_mode_ar_screen.dart';
 
 class ChooseLanguageScreen extends StatelessWidget {
   const ChooseLanguageScreen({super.key});
@@ -21,130 +21,128 @@ class ChooseLanguageScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: Column(
-            children: [
-              // Top Bulb Area
-              Container(
-                height: screenHeight * 0.55,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFEEDFB7),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.elliptical(1000, 360),
+      body: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: Column(
+          children: [
+            // Top Bulb Area
+            Container(
+              height: screenHeight * 0.55,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFEEDFB7),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.elliptical(1000, 360),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Choose Language',
+                    style: TextStyle(
+                      fontSize: titleFontSize,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'NotoSerifBengali-SemiBold',
+                      color: const Color(0xFF1C1C1C),
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Choose Language',
-                      style: TextStyle(
-                        fontSize: titleFontSize,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'NotoSerifBengali-SemiBold',
-                        color: const Color(0xFF1C1C1C),
-                      ),
-                      textAlign: TextAlign.center,
+                  const SizedBox(height: 8),
+                  Text(
+                    'اختار اللغة',
+                    style: TextStyle(
+                      fontSize: titleFontSize - 2,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Cairo',
+                      color: const Color(0xFF1C1C1C),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'اختار اللغة',
-                      style: TextStyle(
-                        fontSize: titleFontSize - 2,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Cairo',
-                        color: const Color(0xFF1C1C1C),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    Image.asset(
-                      'assets/images/image 2-1.png',
-                      height: screenWidth < 400 ? 180 : 220,
-                      width: screenWidth < 400 ? 180 : 220,
-                      fit: BoxFit.contain,
-                    ),
-                  ],
-                ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  Image.asset(
+                    'assets/images/image 2-1.png',
+                    height: screenWidth < 400 ? 180 : 220,
+                    width: screenWidth < 400 ? 180 : 220,
+                    fit: BoxFit.contain,
+                  ),
+                ],
               ),
+            ),
 
-              const Spacer(),
+            const Spacer(),
 
-              // Bottom Buttons
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: buttonWidth,
-                      height: buttonHeight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          provider.setLanguage('en');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const en.ChooseModeScreenEn(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF4545),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+            // Bottom Buttons
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: buttonWidth,
+                    height: buttonHeight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        provider.setLanguage('en');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ChooseModeScreenEn(),
                           ),
-                          elevation: 0,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF4545),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Text(
-                          'English',
-                          style: TextStyle(
-                            fontSize: buttonFontSize,
-                            fontFamily: 'RobotoSlab-Regular',
-                            color: Colors.white,
-                          ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'English',
+                        style: TextStyle(
+                          fontSize: buttonFontSize,
+                          fontFamily: 'RobotoSlab-Regular',
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: buttonWidth,
-                      height: buttonHeight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          provider.setLanguage('ar');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ar.ChooseModeArScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF4545),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: buttonWidth,
+                    height: buttonHeight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        provider.setLanguage('ar');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ChooseModeArScreen(),
                           ),
-                          elevation: 0,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF4545),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Text(
-                          'العربية',
-                          style: TextStyle(
-                            fontSize: buttonFontSize,
-                            fontFamily: 'RobotoSlab-Regular',
-                            color: Colors.white,
-                          ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'العربية',
+                        style: TextStyle(
+                          fontSize: buttonFontSize,
+                          fontFamily: 'RobotoSlab-Regular',
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

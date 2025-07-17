@@ -3,14 +3,26 @@ description: A Coptic Reader App built with Flutter
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: '>=3.0.0 <4.0.0'
+
 
 dependencies:
+  drift: ^2.28.0
   flutter:
     sdk: flutter
   intl: ^0.20.2
+  path_provider: ^2.1.5
   provider: ^6.0.0
   shared_preferences: ^2.5.3
+  path: ^1.9.1
+
+dev_dependencies:
+  build_runner: ^2.3.0
+  drift_dev: ^2.28.0
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
 
 flutter:
   uses-material-design: true

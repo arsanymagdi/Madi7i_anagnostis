@@ -57,7 +57,7 @@ class SplashScreen extends StatelessWidget {
 
                 // Hint
                 Text(
-                  isArabic ? 'اضغط للمتابعة' : 'Tap to continue',
+                  isArabic ? 'اضغط للمتابعة' : 'Tap to here',
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: isArabic ? 'Cairo' : 'NotoSerifBengali',

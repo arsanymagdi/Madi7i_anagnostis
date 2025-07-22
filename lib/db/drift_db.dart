@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-  // Sample insert method
+  // Add a sample section
   Future<void> addSampleSection() async {
     into(sections).insert(
       SectionsCompanion.insert(
@@ -26,6 +26,30 @@ class AppDatabase extends _$AppDatabase {
         order: 1,
       ),
     );
+  }
+
+  // Insert a reading (make sure en/ar/cop fields are present in the DB schema)
+  Future<void> insertReading({
+    required String en,
+    required String ar,
+    required String cop,
+    required int sectionId,
+    required int order,
+  }) async {
+    await into(readings).insert(
+      ReadingsCompanion.insert(
+        en: en,
+        ar: ar,
+        cop: cop,
+        sectionId: sectionId,
+        order: order,
+      ),
+    );
+  }
+
+  // Get a reading by English title (en field)
+  Future<Reading?> getReadingByTitle(String titleEn) async {
+    return (select(readings)..where((tbl) => tbl.en.equals(titleEn))).getSingleOrNull();
   }
 }
 

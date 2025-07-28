@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
@@ -15,8 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Wait 2 seconds then navigate
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
@@ -69,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
               // Hint
               Text(
-                isArabic ? 'جاري المتابعة...' : 'Continuing...',
+                isArabic ? 'جاري التحميل...' : 'Loading...',
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: isArabic ? 'Cairo' : 'NotoSerifBengali',

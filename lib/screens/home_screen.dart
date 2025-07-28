@@ -41,7 +41,6 @@ class HomeScreen extends StatelessWidget {
           child: isLandscape
               ? Row(
                   children: [
-                    // Sidebar
                     Container(
                       width: size.width * 0.35,
                       padding: const EdgeInsets.all(12),
@@ -53,16 +52,12 @@ class HomeScreen extends StatelessWidget {
                             fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 12),
-                          // Settings in top box
-                          _buildSettingsButton(boxColor, translate),
+                          _buildSettingsButton(boxColor, translate, large: false),
                           const Spacer(),
-                          // Bottom box with date
-                          _buildDateBox(boxColor, translate),
+                          _buildDateBox(boxColor, translate, portrait: false),
                         ],
                       ),
                     ),
-
-                    // Main library
                     Expanded(
                       child: _buildLibraryGrid(
                         context,
@@ -74,6 +69,7 @@ class HomeScreen extends StatelessWidget {
                         5,
                         translate,
                         boxColor,
+                        portrait: false,
                       ),
                     ),
                   ],
@@ -98,11 +94,10 @@ class HomeScreen extends StatelessWidget {
                         3,
                         translate,
                         boxColor,
+                        portrait: true,
                       ),
                       const SizedBox(height: 20),
-                      _buildSettingsButton(boxColor, translate),
-                      const SizedBox(height: 20),
-                      _buildDateBox(boxColor, translate),
+                      _buildDateBox(boxColor, translate, portrait: true),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -122,9 +117,10 @@ class HomeScreen extends StatelessWidget {
     int crossAxisCount,
     String Function(String, String) translate,
     Color underlineColor,
+    {required bool portrait}
   ) {
     return Container(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: borderColor, width: 2),
@@ -188,10 +184,7 @@ class HomeScreen extends StatelessWidget {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: borderColor,
-                              width: 2,
-                            ),
+                            border: Border.all(color: borderColor, width: 2),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: ClipRRect(
@@ -217,6 +210,10 @@ class HomeScreen extends StatelessWidget {
                   );
                 }).toList(),
               ),
+              if (portrait) ...[
+                const SizedBox(height: 16),
+                _buildSettingsButton(borderColor, translate, large: true),
+              ]
             ],
           ),
         ),
@@ -225,21 +222,25 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildSettingsButton(
-      Color backgroundColor, String Function(String, String) translate) {
+    Color backgroundColor,
+    String Function(String, String) translate, {
+    required bool large,
+  }) {
     return ElevatedButton.icon(
       onPressed: () {
         // TODO: Navigate to settings screen
       },
-      icon: const Text("⚙️", style: TextStyle(fontSize: 18)),
+      icon: const Text("⚙️", style: TextStyle(fontSize: 20)),
       label: Text(
         translate("Settings", "الإعدادات"),
-        style: const TextStyle(
-          fontSize: 18,
+        style: TextStyle(
+          fontSize: large ? 20 : 16,
           fontFamily: 'RobotoSlab-Regular',
           color: Colors.white,
         ),
       ),
       style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: large ? 24 : 16, vertical: large ? 16 : 12),
         backgroundColor: backgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -249,10 +250,15 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDateBox(Color backgroundColor, String Function(String, String) translate) {
+  Widget _buildDateBox(
+    Color backgroundColor,
+    String Function(String, String) translate, {
+    required bool portrait,
+  }) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      width: portrait ? double.infinity : null,
+      margin: EdgeInsets.symmetric(horizontal: portrait ? 40 : 0),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: portrait ? 24 : 12),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
-import 'choose_mode_en_screen.dart';
-import 'choose_mode_ar_screen.dart';
+import 'choose_mode_screen.dart';
 
 class ChooseLanguageScreen extends StatelessWidget {
   const ChooseLanguageScreen({super.key});
@@ -87,7 +86,7 @@ class ChooseLanguageScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ChooseModeScreenEn(),
+                            builder: (_) => const ChooseModeScreen(),
                           ),
                         );
                       },
@@ -118,7 +117,7 @@ class ChooseLanguageScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ChooseModeArScreen(),
+                            builder: (_) => const ChooseModeScreen(),
                           ),
                         );
                       },

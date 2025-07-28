@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
-import 'white_mode_en/greeting_screen.dart';
-import 'dark_mode_en/greeting_screen.dart';
-import 'white_mode_ar/greeting_screen.dart';
-import 'dark_mode_ar/greeting_screen.dart';
+import 'greeting_screen.dart';
 
 class ChooseModeScreen extends StatelessWidget {
   const ChooseModeScreen({super.key});
@@ -87,8 +84,8 @@ class ChooseModeScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (_) => isArabic
-                              ? const WhiteArGreetingScreen()
-                              : const WhiteEnGreetingScreen(),
+                              ? const GreetingScreen()
+                              : const GreetingScreen(),
                         ),
                       );
                     },
@@ -123,8 +120,8 @@ class ChooseModeScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (_) => isArabic
-                              ? const DarkArGreetingScreen()
-                              : const DarkEnGreetingScreen(),
+                              ? const GreetingScreen()
+                              : const GreetingScreen(),
                         ),
                       );
                     },

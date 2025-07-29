@@ -12,10 +12,17 @@ class DocumentPage extends StatefulWidget {
 
 class _DocumentPageState extends State<DocumentPage> {
   final scrollController = ScrollController();
-  final sectionKeys = List.generate(5, (_) => GlobalKey());
 
   double fontSize = 16.0;
   bool showColumns = true;
+
+  final List<Map<String, dynamic>> sections = [
+    {'title': 'Ⲡ̀ⲣⲟⲉⲩⲭⲏ', 'expanded': true},
+    {'title': 'Gospel', 'expanded': false},
+    {'title': 'Ⲡ̀ⲛⲉⲩⲙⲁ', 'expanded': false},
+    {'title': 'Ⲧⲁⲅⲓⲟⲛ', 'expanded': false},
+    {'title': 'Conclusion', 'expanded': false},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +34,10 @@ class _DocumentPageState extends State<DocumentPage> {
     final textColor = isDark ? Colors.white : Colors.black;
     final redColor = const Color(0xFFFF4545);
 
-    final sections = [
-      'Ⲡ̀ⲣⲟⲉⲩⲭⲏ',
-      'Gospel',
-      'Ⲡ̀ⲛⲉⲩⲙⲁ',
-      'Ⲧⲁⲅⲓⲟⲛ',
-      'Conclusion',
-    ];
-
     return Directionality(
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: bgColor,
-
-        // 🧭 LEFT Drawer
         drawer: Drawer(
           backgroundColor: bgColor,
           child: ListView(
@@ -70,9 +67,7 @@ class _DocumentPageState extends State<DocumentPage> {
               ListTile(
                 leading: Icon(Icons.settings, color: textColor),
                 title: Text(isAr ? 'الإعدادات' : 'Settings', style: TextStyle(color: textColor)),
-                onTap: () {
-                  // future settings screen
-                },
+                onTap: () {},
               ),
               const Divider(),
               ListTile(
@@ -96,8 +91,6 @@ class _DocumentPageState extends State<DocumentPage> {
             ],
           ),
         ),
-
-        // 📚 RIGHT Drawer (ToC)
         endDrawer: Drawer(
           backgroundColor: bgColor,
           child: ListView(
@@ -112,14 +105,10 @@ class _DocumentPageState extends State<DocumentPage> {
               ),
               for (int i = 0; i < sections.length; i++) ...[
                 ListTile(
-                  title: Text(sections[i], style: TextStyle(color: textColor, fontSize: 14)),
+                  title: Text(sections[i]['title'], style: TextStyle(color: textColor, fontSize: 14)),
                   onTap: () {
                     Navigator.pop(context);
-                    Scrollable.ensureVisible(
-                      sectionKeys[i].currentContext!,
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeInOut,
-                    );
+                    // TODO: Jump to section
                   },
                 ),
                 Divider(color: isDark ? Colors.grey : Colors.black12),
@@ -127,8 +116,6 @@ class _DocumentPageState extends State<DocumentPage> {
             ],
           ),
         ),
-
-        // 📝 MAIN CONTENT
         body: SafeArea(
           child: SingleChildScrollView(
             controller: scrollController,
@@ -148,99 +135,70 @@ class _DocumentPageState extends State<DocumentPage> {
                 Container(height: 2, width: 80, color: redColor),
                 const SizedBox(height: 20),
 
-                // SECTIONS
-                for (int i = 0; i < sections.length; i++)
-                  Padding(
-                    key: sectionKeys[i],
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          sections[i],
-                          style: TextStyle(
-                            fontSize: fontSize + 2,
-                            fontWeight: FontWeight.bold,
-                            color: redColor,
-                          ),
+                // Section loop
+                for (int i = 0; i < sections.length; i++) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        sections[i]['title'],
+                        style: TextStyle(
+                          fontSize: fontSize + 2,
+                          fontWeight: FontWeight.bold,
+                          color: redColor,
                         ),
-                        const SizedBox(height: 10),
-
-                        // 3-COLUMN SECTION
-                        if (showColumns)
-                          IntrinsicHeight(
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          sections[i]['expanded'] ? Icons.remove : Icons.add,
+                          color: redColor,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            sections[i]['expanded'] = !sections[i]['expanded'];
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  if (sections[i]['expanded'])
+                    showColumns
+                        ? IntrinsicHeight(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // ENGLISH
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "In the name of the Father, Son and Holy Spirit... (Section $i)",
-                                        style: TextStyle(color: textColor, fontSize: fontSize),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Blessed is He who comes in the name of the Lord... Amen.",
-                                        style: TextStyle(color: textColor, fontSize: fontSize),
-                                      ),
-                                    ],
+                                  child: Text(
+                                    "In the name of the Father... (Section $i)",
+                                    style: TextStyle(color: textColor, fontSize: fontSize),
                                   ),
                                 ),
-
-                                // DIVIDER
                                 Container(width: 1.5, color: redColor, margin: const EdgeInsets.symmetric(horizontal: 8)),
-
-                                // COPTIC
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Ⲓⲛ ⲧⲉ ⲣⲁⲛ ⲛ̀ⲧⲉ Ⲡ̀ⲓⲱⲧ... (ⲥⲉⲕⲥⲓⲟⲛ $i)",
-                                        style: TextStyle(color: textColor, fontSize: fontSize),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Ⲡⲓⲉⲩⲱⲧ ⲉⲑⲛⲁⲩ ⲉ̀ⲡ̀ⲣⲁⲛ ⲛ̀Ⲫⲓⲱⲧ...",
-                                        style: TextStyle(color: textColor, fontSize: fontSize),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                  child: Text(
+                                    "Ⲓⲛ ⲧⲉ ⲣⲁⲛ ⲛ̀ⲧⲉ Ⲡ̀ⲓⲱⲧ... (ⲥⲉⲕⲥⲓⲟⲛ $i)",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: textColor, fontSize: fontSize),
                                   ),
                                 ),
-
-                                // DIVIDER
                                 Container(width: 1.5, color: redColor, margin: const EdgeInsets.symmetric(horizontal: 8)),
-
-                                // ARABIC
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "باسم الآب والابن والروح القدس... (قسم $i)",
-                                        style: TextStyle(color: textColor, fontSize: fontSize),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "مبارك الآتي باسم الرب...",
-                                        style: TextStyle(color: textColor, fontSize: fontSize),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ],
+                                  child: Text(
+                                    "باسم الآب والابن والروح القدس... (قسم $i)",
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(color: textColor, fontSize: fontSize),
                                   ),
                                 ),
                               ],
                             ),
+                          )
+                        : Text(
+                            "In the name of the Father, Son and Holy Spirit... (Flat Section $i)",
+                            style: TextStyle(color: textColor, fontSize: fontSize),
                           ),
-                      ],
-                    ),
-                  ),
+                  const SizedBox(height: 20),
+                ],
               ],
             ),
           ),

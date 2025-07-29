@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
+import 'settings_screen.dart';
 
 class DocumentPage extends StatefulWidget {
   final String title;
@@ -12,9 +13,6 @@ class DocumentPage extends StatefulWidget {
 
 class _DocumentPageState extends State<DocumentPage> {
   final scrollController = ScrollController();
-
-  double fontSize = 16.0;
-  bool showColumns = true;
 
   final List<Map<String, dynamic>> sections = [
     {'title': 'Ⲡ̀ⲣⲟⲉⲩⲭⲏ', 'expanded': true},
@@ -29,6 +27,8 @@ class _DocumentPageState extends State<DocumentPage> {
     final provider = Provider.of<AppProvider>(context);
     final isDark = provider.themeMode == 'dark';
     final isAr = provider.language == 'ar';
+    final fontSize = provider.documentFontSize;
+    final showColumns = provider.showDocumentColumn;
 
     final bgColor = isDark ? const Color(0xFF1C1C1C) : Colors.white;
     final textColor = isDark ? Colors.white : Colors.black;
@@ -44,7 +44,9 @@ class _DocumentPageState extends State<DocumentPage> {
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(color: isDark ? Colors.black87 : Colors.grey.shade200),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.black87 : Colors.grey.shade200,
+                ),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -67,26 +69,28 @@ class _DocumentPageState extends State<DocumentPage> {
               ListTile(
                 leading: Icon(Icons.settings, color: textColor),
                 title: Text(isAr ? 'الإعدادات' : 'Settings', style: TextStyle(color: textColor)),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                  );
+                },
               ),
               const Divider(),
               ListTile(
-                leading: Icon(Icons.text_fields, color: textColor),
-                title: Text(isAr ? 'تغيير حجم الخط' : 'Font Size', style: TextStyle(color: textColor)),
-                onTap: () {
-                  setState(() {
-                    fontSize = fontSize == 16 ? 20 : 16;
-                  });
-                },
+                leading: Icon(Icons.text_increase, color: textColor),
+                title: Text(isAr ? 'تكبير الخط' : 'Increase Font Size', style: TextStyle(color: textColor)),
+                onTap: () => provider.setDocumentFontSize(fontSize + 1),
+              ),
+              ListTile(
+                leading: Icon(Icons.text_decrease, color: textColor),
+                title: Text(isAr ? 'تصغير الخط' : 'Decrease Font Size', style: TextStyle(color: textColor)),
+                onTap: () => provider.setDocumentFontSize(fontSize - 1),
               ),
               ListTile(
                 leading: Icon(Icons.view_column, color: textColor),
                 title: Text(isAr ? 'إظهار/إخفاء الأعمدة' : 'Toggle Columns', style: TextStyle(color: textColor)),
-                onTap: () {
-                  setState(() {
-                    showColumns = !showColumns;
-                  });
-                },
+                onTap: () => provider.toggleDocumentColumn(),
               ),
             ],
           ),
@@ -97,7 +101,9 @@ class _DocumentPageState extends State<DocumentPage> {
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(color: isDark ? Colors.black87 : Colors.grey.shade200),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.black87 : Colors.grey.shade200,
+                ),
                 child: Text(
                   isAr ? 'جدول المحتويات' : 'Table of Contents',
                   style: TextStyle(color: textColor, fontSize: 18),
@@ -108,7 +114,7 @@ class _DocumentPageState extends State<DocumentPage> {
                   title: Text(sections[i]['title'], style: TextStyle(color: textColor, fontSize: 14)),
                   onTap: () {
                     Navigator.pop(context);
-                    // TODO: Jump to section
+                    // TODO: implement scroll to section if needed
                   },
                 ),
                 Divider(color: isDark ? Colors.grey : Colors.black12),
@@ -135,7 +141,7 @@ class _DocumentPageState extends State<DocumentPage> {
                 Container(height: 2, width: 80, color: redColor),
                 const SizedBox(height: 20),
 
-                // Section loop
+                // Sections loop
                 for (int i = 0; i < sections.length; i++) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

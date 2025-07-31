@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/app_provider.dart'; // Make sure the path is correct
+import '../providers/app_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -8,103 +8,107 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context);
-
-    final isDark = provider.isDarkTheme;
-    final isArabic = provider.isArabic;
-    final fontSize = provider.documentFontSize;
-    final showColumn = provider.showDocumentColumn;
+    final theme = Theme.of(context); // current theme
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor, // ✨ Use theme background
       appBar: AppBar(
+        backgroundColor: theme.colorScheme.primary, // ✨ Use themed primary color
         title: Text(
-          isArabic ? 'الإعدادات' : 'Settings',
-          style: const TextStyle(fontFamily: 'RobotoSlab-Bold'),
+          provider.isArabic ? 'الإعدادات' : 'Settings',
+          style: TextStyle(color: theme.colorScheme.onPrimary), // adapt text color
         ),
-        backgroundColor: isDark ? Colors.black : Colors.white,
-        foregroundColor: isDark ? Colors.white : Colors.black,
+        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
       ),
-      backgroundColor: isDark ? const Color(0xFF1C1C1C) : Colors.white,
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.all(16),
         children: [
-
-          // 🌙 Theme Toggle (Full App)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                isArabic ? 'الوضع الداكن' : 'Dark Mode',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
-              ),
-              Switch(
-                value: isDark,
-                onChanged: (_) => provider.toggleTheme(),
-              ),
-            ],
+          // Theme Mode Dropdown
+          ListTile(
+            title: Text(
+              provider.isArabic ? 'الوضع' : 'Theme',
+              style: TextStyle(color: theme.textTheme.bodyLarge!.color),
+            ),
+            trailing: DropdownButton<String>(
+              value: provider.themeMode,
+              dropdownColor: theme.dialogBackgroundColor, // for dark mode dropdown
+              onChanged: (value) {
+                if (value != null) provider.setThemeMode(value);
+              },
+              items: const [
+                DropdownMenuItem(value: 'light', child: Text('Light')),
+                DropdownMenuItem(value: 'dark', child: Text('Dark')),
+              ],
+            ),
           ),
-          const SizedBox(height: 20),
 
-          // 🌐 Language Toggle (Full App)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                isArabic ? 'اللغة العربية' : 'Arabic Language',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
-              ),
-              Switch(
-                value: isArabic,
-                onChanged: (_) => provider.toggleLanguage(),
-              ),
-            ],
+          // Language Dropdown
+          ListTile(
+            title: Text(
+              provider.isArabic ? 'اللغة' : 'Language',
+              style: TextStyle(color: theme.textTheme.bodyLarge!.color),
+            ),
+            trailing: DropdownButton<String>(
+              value: provider.language,
+              dropdownColor: theme.dialogBackgroundColor,
+              onChanged: (value) {
+                if (value != null) provider.setLanguage(value);
+              },
+              items: const [
+                DropdownMenuItem(value: 'en', child: Text('English')),
+                DropdownMenuItem(value: 'ar', child: Text('العربية')),
+              ],
+            ),
           ),
-          const Divider(height: 40),
 
-          // 📄 Column Toggle (Only for Document Page)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                isArabic ? 'إظهار العمود الجانبي' : 'Show Side Column',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
-              ),
-              Switch(
-                value: showColumn,
-                onChanged: (_) => provider.toggleDocumentColumn(),
-              ),
-            ],
+          const Divider(),
+
+          // Font Size Slider
+          ListTile(
+            title: Text(
+              provider.isArabic ? 'حجم الخط' : 'Font Size',
+              style: TextStyle(color: theme.textTheme.bodyLarge!.color),
+            ),
+            subtitle: Slider(
+              value: provider.documentFontSize,
+              min: 12,
+              max: 30,
+              divisions: 18,
+              activeColor: const Color(0xFFFF4545),
+              label: provider.documentFontSize.toInt().toString(),
+              onChanged: (value) => provider.setDocumentFontSize(value),
+            ),
           ),
-          const SizedBox(height: 24),
 
-          // 🔤 Font Size Slider (Only for Document Page)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isArabic ? 'حجم الخط في صفحة المستند' : 'Document Font Size',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
-              ),
-              Slider(
-                value: fontSize,
-                min: 12,
-                max: 28,
-                divisions: 8,
-                label: fontSize.toStringAsFixed(0),
-                onChanged: (value) => provider.setDocumentFontSize(value),
-              ),
-            ],
+          const Divider(),
+
+          // Column toggles
+          SwitchListTile(
+            title: Text(
+              provider.isArabic ? 'إظهار عمود الإنجليزي' : 'Show English Column',
+              style: TextStyle(color: theme.textTheme.bodyLarge!.color),
+            ),
+            value: provider.showEnglishColumn,
+            activeColor: const Color(0xFFFF4545),
+            onChanged: (_) => provider.toggleEnglishColumn(),
+          ),
+          SwitchListTile(
+            title: Text(
+              provider.isArabic ? 'إظهار عمود العربي' : 'Show Arabic Column',
+              style: TextStyle(color: theme.textTheme.bodyLarge!.color),
+            ),
+            value: provider.showArabicColumn,
+            activeColor: const Color(0xFFFF4545),
+            onChanged: (_) => provider.toggleArabicColumn(),
+          ),
+          SwitchListTile(
+            title: Text(
+              provider.isArabic ? 'إظهار عمود القبطي' : 'Show Coptic Column',
+              style: TextStyle(color: theme.textTheme.bodyLarge!.color),
+            ),
+            value: provider.showCopticColumn,
+            activeColor: const Color(0xFFFF4545),
+            onChanged: (_) => provider.toggleCopticColumn(),
           ),
         ],
       ),

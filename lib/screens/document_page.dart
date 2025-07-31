@@ -14,6 +14,9 @@ class DocumentPage extends StatefulWidget {
 class _DocumentPageState extends State<DocumentPage> {
   final scrollController = ScrollController();
 
+  // Create GlobalKeys for each section to scroll to
+  final List<GlobalKey> sectionKeys = List.generate(5, (_) => GlobalKey());
+
   final List<Map<String, dynamic>> sections = [
     {'title': 'Ⲡ̀ⲣⲟⲉⲩⲭⲏ', 'expanded': true},
     {'title': 'Gospel', 'expanded': false},
@@ -28,11 +31,10 @@ class _DocumentPageState extends State<DocumentPage> {
     final isDark = provider.themeMode == 'dark';
     final isAr = provider.language == 'ar';
     final fontSize = provider.documentFontSize;
-    final showColumns = provider.showDocumentColumn;
 
-    final bgColor = isDark ? const Color(0xFF1C1C1C) : Colors.white;
+    final primaryColor = const Color(0xFFFF4545);
     final textColor = isDark ? Colors.white : Colors.black;
-    final redColor = const Color(0xFFFF4545);
+    final bgColor = isDark ? const Color(0xFF1C1C1C) : Colors.white;
 
     return Directionality(
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
@@ -40,13 +42,10 @@ class _DocumentPageState extends State<DocumentPage> {
         backgroundColor: bgColor,
         drawer: Drawer(
           backgroundColor: bgColor,
-          child: ListView(
-            padding: EdgeInsets.zero,
+          child: Column(
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.black87 : Colors.grey.shade200,
-                ),
+                decoration: BoxDecoration(color: primaryColor.withOpacity(0.2)),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -55,55 +54,56 @@ class _DocumentPageState extends State<DocumentPage> {
                   ),
                 ),
               ),
-              ListTile(
-                leading: Icon(Icons.home, color: textColor),
-                title: Text(isAr ? 'الرئيسية' : 'Home', style: TextStyle(color: textColor)),
-                onTap: () => Navigator.popUntil(context, (route) => route.isFirst),
-              ),
-              ListTile(
-                leading: Icon(Icons.arrow_back, color: textColor),
-                title: Text(isAr ? 'رجوع' : 'Back', style: TextStyle(color: textColor)),
-                onTap: () => Navigator.pop(context),
+              Expanded(
+                child: ListView(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.home, color: textColor),
+                      title: Text(isAr ? 'الرئيسية' : 'Home', style: TextStyle(color: textColor)),
+                      onTap: () => Navigator.popUntil(context, (route) => route.isFirst),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.arrow_back, color: textColor),
+                      title: Text(isAr ? 'رجوع' : 'Back', style: TextStyle(color: textColor)),
+                      onTap: () => Navigator.pop(context),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.list_alt, color: textColor),
+                      title: Text(isAr ? 'جدول المحتويات' : 'Table of Contents', style: TextStyle(color: textColor)),
+                      onTap: () {
+                        Navigator.pop(context); // close drawer
+                        Scaffold.of(context).openEndDrawer(); // open endDrawer
+                      },
+                    ),
+                  ],
+                ),
               ),
               const Divider(),
-              ListTile(
-                leading: Icon(Icons.settings, color: textColor),
-                title: Text(isAr ? 'الإعدادات' : 'Settings', style: TextStyle(color: textColor)),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                  );
-                },
-              ),
-              const Divider(),
-              ListTile(
-                leading: Icon(Icons.text_increase, color: textColor),
-                title: Text(isAr ? 'تكبير الخط' : 'Increase Font Size', style: TextStyle(color: textColor)),
-                onTap: () => provider.setDocumentFontSize(fontSize + 1),
-              ),
-              ListTile(
-                leading: Icon(Icons.text_decrease, color: textColor),
-                title: Text(isAr ? 'تصغير الخط' : 'Decrease Font Size', style: TextStyle(color: textColor)),
-                onTap: () => provider.setDocumentFontSize(fontSize - 1),
-              ),
-              ListTile(
-                leading: Icon(Icons.view_column, color: textColor),
-                title: Text(isAr ? 'إظهار/إخفاء الأعمدة' : 'Toggle Columns', style: TextStyle(color: textColor)),
-                onTap: () => provider.toggleDocumentColumn(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ListTile(
+                  leading: Icon(Icons.settings, color: textColor),
+                  title: Text(isAr ? 'الإعدادات' : 'Settings', style: TextStyle(color: textColor)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                    );
+                  },
+                ),
               ),
             ],
           ),
         ),
+
+        // END Drawer (Table of Contents)
         endDrawer: Drawer(
           backgroundColor: bgColor,
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.black87 : Colors.grey.shade200,
-                ),
+                decoration: BoxDecoration(color: primaryColor.withOpacity(0.2)),
                 child: Text(
                   isAr ? 'جدول المحتويات' : 'Table of Contents',
                   style: TextStyle(color: textColor, fontSize: 18),
@@ -114,7 +114,13 @@ class _DocumentPageState extends State<DocumentPage> {
                   title: Text(sections[i]['title'], style: TextStyle(color: textColor, fontSize: 14)),
                   onTap: () {
                     Navigator.pop(context);
-                    // TODO: implement scroll to section if needed
+                    final keyContext = sectionKeys[i].currentContext;
+                    if (keyContext != null) {
+                      Scrollable.ensureVisible(
+                        keyContext,
+                        duration: const Duration(milliseconds: 300),
+                      );
+                    }
                   },
                 ),
                 Divider(color: isDark ? Colors.grey : Colors.black12),
@@ -122,6 +128,7 @@ class _DocumentPageState extends State<DocumentPage> {
             ],
           ),
         ),
+
         body: SafeArea(
           child: SingleChildScrollView(
             controller: scrollController,
@@ -138,78 +145,114 @@ class _DocumentPageState extends State<DocumentPage> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Container(height: 2, width: 80, color: redColor),
+                Container(height: 2, width: 80, color: primaryColor),
                 const SizedBox(height: 20),
 
-                // Sections loop
                 for (int i = 0; i < sections.length; i++) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        sections[i]['title'],
-                        style: TextStyle(
-                          fontSize: fontSize + 2,
-                          fontWeight: FontWeight.bold,
-                          color: redColor,
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          sections[i]['expanded'] ? Icons.remove : Icons.add,
-                          color: redColor,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            sections[i]['expanded'] = !sections[i]['expanded'];
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  if (sections[i]['expanded'])
-                    showColumns
-                        ? IntrinsicHeight(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "In the name of the Father... (Section $i)",
-                                    style: TextStyle(color: textColor, fontSize: fontSize),
-                                  ),
-                                ),
-                                Container(width: 1.5, color: redColor, margin: const EdgeInsets.symmetric(horizontal: 8)),
-                                Expanded(
-                                  child: Text(
-                                    "Ⲓⲛ ⲧⲉ ⲣⲁⲛ ⲛ̀ⲧⲉ Ⲡ̀ⲓⲱⲧ... (ⲥⲉⲕⲥⲓⲟⲛ $i)",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: textColor, fontSize: fontSize),
-                                  ),
-                                ),
-                                Container(width: 1.5, color: redColor, margin: const EdgeInsets.symmetric(horizontal: 8)),
-                                Expanded(
-                                  child: Text(
-                                    "باسم الآب والابن والروح القدس... (قسم $i)",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(color: textColor, fontSize: fontSize),
-                                  ),
-                                ),
-                              ],
+                  Container(
+                    key: sectionKeys[i],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              sections[i]['title'],
+                              style: TextStyle(
+                                fontSize: fontSize + 2,
+                                fontWeight: FontWeight.bold,
+                                color: primaryColor,
+                              ),
                             ),
-                          )
-                        : Text(
-                            "In the name of the Father, Son and Holy Spirit... (Flat Section $i)",
-                            style: TextStyle(color: textColor, fontSize: fontSize),
-                          ),
-                  const SizedBox(height: 20),
+                            IconButton(
+                              icon: Icon(
+                                sections[i]['expanded'] ? Icons.remove : Icons.add,
+                                color: primaryColor,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  sections[i]['expanded'] = !sections[i]['expanded'];
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        if (sections[i]['expanded'])
+                          _buildColumns(context, provider, fontSize, textColor, primaryColor, i),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
                 ],
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildColumns(BuildContext context, AppProvider provider, double fontSize, Color textColor, Color primaryColor, int index) {
+    final columns = <Widget>[];
+
+    if (provider.showEnglishColumn) {
+      columns.add(
+        Expanded(
+          child: Text(
+            "In the name of the Father... (Section $index)",
+            style: TextStyle(color: textColor, fontSize: fontSize),
+          ),
+        ),
+      );
+    }
+
+    if (provider.showEnglishColumn && (provider.showArabicColumn || provider.showCopticColumn)) {
+      columns.add(_divider(primaryColor));
+    }
+
+    if (provider.showCopticColumn) {
+      columns.add(
+        Expanded(
+          child: Text(
+            "Ⲓⲛ ⲧⲉ ⲣⲁⲛ ⲛ̀ⲧⲉ Ⲡ̀ⲓⲱⲧ... ($index)",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: textColor, fontSize: fontSize),
+          ),
+        ),
+      );
+    }
+
+    if (provider.showCopticColumn && provider.showArabicColumn) {
+      columns.add(_divider(primaryColor));
+    }
+
+    if (provider.showArabicColumn) {
+      columns.add(
+        Expanded(
+          child: Text(
+            "باسم الآب والابن والروح القدس... (قسم $index)",
+            textAlign: TextAlign.right,
+            style: TextStyle(color: textColor, fontSize: fontSize),
+          ),
+        ),
+      );
+    }
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: columns,
+      ),
+    );
+  }
+
+  Widget _divider(Color color) {
+    return Container(
+      width: 1.5,
+      color: color,
+      margin: const EdgeInsets.symmetric(horizontal: 8),
     );
   }
 }

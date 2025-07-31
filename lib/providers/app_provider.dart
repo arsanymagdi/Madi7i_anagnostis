@@ -3,37 +3,43 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppProvider with ChangeNotifier {
   // Global Settings
-  String _language = 'en';
-  String _themeMode = 'light';
+  String _language = 'en'; // 'en', 'ar', 'cop'
+  String _themeMode = 'light'; // 'light' or 'dark'
 
   // Document Page Settings
   double _documentFontSize = 16.0;
-  bool _showDocumentColumn = true;
+  bool _showEnglishColumn = true;
+  bool _showArabicColumn = true;
+  bool _showCopticColumn = true;
 
   // Getters
   String get language => _language;
   String get themeMode => _themeMode;
 
   double get documentFontSize => _documentFontSize;
-  bool get showDocumentColumn => _showDocumentColumn;
+  bool get showEnglishColumn => _showEnglishColumn;
+  bool get showArabicColumn => _showArabicColumn;
+  bool get showCopticColumn => _showCopticColumn;
 
   AppProvider() {
     _loadFromPrefs();
   }
 
-  // Load settings from SharedPreferences
+  // Load all settings from SharedPreferences
   void _loadFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     _language = prefs.getString('language') ?? 'en';
     _themeMode = prefs.getString('themeMode') ?? 'light';
     _documentFontSize = prefs.getDouble('documentFontSize') ?? 16.0;
-    _showDocumentColumn = prefs.getBool('showDocumentColumn') ?? true;
+    _showEnglishColumn = prefs.getBool('showEnglishColumn') ?? true;
+    _showArabicColumn = prefs.getBool('showArabicColumn') ?? true;
+    _showCopticColumn = prefs.getBool('showCopticColumn') ?? true;
 
     notifyListeners();
   }
 
-  // Setters for global settings
+  // Language and Theme
   void setLanguage(String lang) async {
     _language = lang;
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,7 +54,7 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Setters for document-only settings
+  // Font size
   void setDocumentFontSize(double size) async {
     _documentFontSize = size;
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -56,23 +62,46 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleDocumentColumn() async {
-    _showDocumentColumn = !_showDocumentColumn;
+  // Column toggles
+  void toggleEnglishColumn() async {
+    _showEnglishColumn = !_showEnglishColumn;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('showDocumentColumn', _showDocumentColumn);
+    await prefs.setBool('showEnglishColumn', _showEnglishColumn);
     notifyListeners();
   }
 
-  // Helpers for theme/language toggle
+  void toggleArabicColumn() async {
+    _showArabicColumn = !_showArabicColumn;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('showArabicColumn', _showArabicColumn);
+    notifyListeners();
+  }
+
+  void toggleCopticColumn() async {
+    _showCopticColumn = !_showCopticColumn;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('showCopticColumn', _showCopticColumn);
+    notifyListeners();
+  }
+
+  // Helpers
   void toggleTheme() {
     setThemeMode(_themeMode == 'light' ? 'dark' : 'light');
   }
 
   void toggleLanguage() {
-    setLanguage(_language == 'en' ? 'ar' : 'en');
+    if (_language == 'en') {
+      setLanguage('ar');
+    } else if (_language == 'ar') {
+      setLanguage('cop');
+    } else {
+      setLanguage('en');
+    }
   }
 
-  // Theme check shortcut
+  // Convenience getters
   bool get isDarkTheme => _themeMode == 'dark';
   bool get isArabic => _language == 'ar';
+  bool get isEnglish => _language == 'en';
+  bool get isCoptic => _language == 'cop';
 }

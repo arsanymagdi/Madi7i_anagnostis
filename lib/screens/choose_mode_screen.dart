@@ -45,6 +45,7 @@ class ChooseModeScreen extends StatelessWidget {
                     fontSize: titleFontSize,
                     fontFamily: isArabic ? 'Cairo' : 'NotoSerifBengali-ExtraBold',
                     fontWeight: FontWeight.w900,
+                    color: Color(0xFF1C1C1C), // <-- ADD THIS LINE
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -55,6 +56,7 @@ class ChooseModeScreen extends StatelessWidget {
                     fontSize: titleFontSize,
                     fontFamily: isArabic ? 'Cairo' : 'NotoSerifBengali-ExtraBold',
                     fontWeight: FontWeight.w900,
+                    color: Color(0xFF1C1C1C), // <-- ADD THIS LINE
                   ),
                 ),
               ],
